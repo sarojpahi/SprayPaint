@@ -8,6 +8,15 @@ const DrawingApp = () => {
   const [context, setContext] = useState();
   const [amount, setAmount] = useState(3);
 
+  const handleSize = (e) => {
+    const value = e.target.value;
+    if (value > 5) {
+      setAmount(5);
+    } else if (value < 1) {
+      setAmount(1);
+    } else setAmount(value);
+  };
+
   const [color, setColor] = useState(colorArray[0]);
   useEffect(() => {
     if (canvasRef.current) {
@@ -50,7 +59,7 @@ const DrawingApp = () => {
             min={1}
             max={5}
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={handleSize}
           />
         </div>
         <div className="clear" onClick={() => clear()}>
@@ -68,7 +77,7 @@ const DrawingApp = () => {
 };
 
 function RandomizeParticles(stageX, stageY, ctx, color, amount) {
-  for (var i = 0; i < amount * 2; i++) {
+  for (var i = 0; i < amount; i++) {
     var x = stageX + (Math.random() - 0.5) * Math.random() * amount * 3;
     var y = stageY + (Math.random() - 0.5) * Math.random() * amount * 3;
     var alpha = Math.random();
