@@ -33,3 +33,9 @@
 .clear:hover {
   letter-spacing: 2px;
 }
+.size input {
+  width: 30px;
+  height: 30px;
+  padding-left: 10px;
+  font-weight: bold;
+}

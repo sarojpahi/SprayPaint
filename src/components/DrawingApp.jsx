@@ -6,6 +6,7 @@ const DrawingApp = () => {
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [context, setContext] = useState();
+  const [amount, setAmount] = useState(3);
 
   const [color, setColor] = useState(colorArray[0]);
   useEffect(() => {
@@ -22,7 +23,7 @@ const DrawingApp = () => {
 
   function drawLine(start, end, ctx, color) {
     start = start ?? end;
-    RandomizeParticles(start.x, start.y, ctx, color);
+    RandomizeParticles(start.x, start.y, ctx, color, amount * 15);
   }
   const clear = () => {
     context.clearRect(0, 0, x, y);
@@ -43,6 +44,15 @@ const DrawingApp = () => {
             }}
           ></div>
         ))}
+        <div className="size">
+          <input
+            type="number"
+            min={1}
+            max={5}
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </div>
         <div className="clear" onClick={() => clear()}>
           Clear
         </div>
@@ -57,28 +67,42 @@ const DrawingApp = () => {
   );
 };
 
-function RandomizeParticles(stageX, stageY, ctx, color) {
-  for (var i = 0; i < 50; i++) {
-    var x = stageX + (Math.random() - 0.5) * Math.random() * 150;
-    var y = stageY + (Math.random() - 0.5) * Math.random() * 150;
+function RandomizeParticles(stageX, stageY, ctx, color, amount) {
+  for (var i = 0; i < amount * 2; i++) {
+    var x = stageX + (Math.random() - 0.5) * Math.random() * amount * 3;
+    var y = stageY + (Math.random() - 0.5) * Math.random() * amount * 3;
     var alpha = Math.random();
 
     if (
-      x > stageX + 30 ||
-      x < stageX - 30 ||
-      y > stageY + 30 ||
-      y < stageY - 30
+      x > stageX + (amount - 20) ||
+      x < stageX - (amount - 20) ||
+      y > stageY + (amount - 20) ||
+      y < stageY - (amount - 20)
     ) {
-      var rad = Math.random() * 4;
+      var rad = (Math.random() * amount) / 20;
     } else if (
-      x > stageX + 35 ||
-      x < stageX - 35 ||
-      y > stageY + 35 ||
-      y < stageY - 35
+      x > stageX + (amount - 25) ||
+      x < stageX - (amount - 25) ||
+      y > stageY + (amount - 25) ||
+      y < stageY - (amount - 25)
     ) {
-      var rad = Math.random() * 2;
+      var rad = (Math.random() * amount) / 25;
+    } else if (
+      x > stageX + (amount - 30) ||
+      x < stageX - (amount - 30) ||
+      y > stageY + (amount - 30) ||
+      y < stageY - (amount - 30)
+    ) {
+      var rad = (Math.random() * amount) / 30;
+    } else if (
+      x > stageX + (amount - 15) ||
+      x < stageX - (amount - 15) ||
+      y > stageY + (amount - 15) ||
+      y < stageY - (amount - 15)
+    ) {
+      var rad = Math.random() * 1;
     } else {
-      var rad = Math.random() * 10;
+      var rad = (Math.random() * amount) / 10;
     }
 
     new Particle(x, y, rad, alpha, ctx, color);
