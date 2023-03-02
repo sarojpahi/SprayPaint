@@ -7,6 +7,7 @@ const DrawingApp = () => {
   const [y, setY] = useState(0);
   const [context, setContext] = useState();
   const [amount, setAmount] = useState(3);
+  const [intensity, setIntensity] = useState(3);
 
   const handleSize = (e) => {
     const value = e.target.value;
@@ -15,6 +16,14 @@ const DrawingApp = () => {
     } else if (value < 1) {
       setAmount(1);
     } else setAmount(value);
+  };
+  const handleIntensity = (e) => {
+    const value = e.target.value;
+    if (value > 5) {
+      setIntensity(5);
+    } else if (value < 1) {
+      setIntensity(1);
+    } else setIntensity(value);
   };
 
   const [color, setColor] = useState(colorArray[0]);
@@ -32,7 +41,14 @@ const DrawingApp = () => {
 
   function drawLine(start, end, ctx, color) {
     start = start ?? end;
-    RandomizeParticles(start.x, start.y, ctx, color, amount * 15);
+    RandomizeParticles(
+      start.x,
+      start.y,
+      ctx,
+      color,
+      amount * 15,
+      intensity * 50
+    );
   }
   const clear = () => {
     context.clearRect(0, 0, x, y);
@@ -54,13 +70,27 @@ const DrawingApp = () => {
           ></div>
         ))}
         <div className="size">
-          <input
-            type="number"
-            min={1}
-            max={5}
-            value={amount}
-            onChange={handleSize}
-          />
+          <div>
+            Width :
+            <input
+              type="number"
+              min={1}
+              max={5}
+              value={amount}
+              onChange={handleSize}
+            />{" "}
+          </div>
+
+          <div>
+            Intensity:
+            <input
+              type="number"
+              min={1}
+              max={5}
+              value={intensity}
+              onChange={handleIntensity}
+            />
+          </div>
         </div>
         <div className="clear" onClick={() => clear()}>
           Clear
@@ -84,8 +114,8 @@ const DrawingApp = () => {
   );
 };
 
-function RandomizeParticles(stageX, stageY, ctx, color, amount) {
-  for (var i = 0; i < amount; i++) {
+function RandomizeParticles(stageX, stageY, ctx, color, amount, intensity) {
+  for (var i = 0; i < intensity; i++) {
     var x = stageX + (Math.random() - 0.5) * Math.random() * amount * 3;
     var y = stageY + (Math.random() - 0.5) * Math.random() * amount * 3;
     var alpha = Math.random();

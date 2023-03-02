@@ -43,7 +43,7 @@ export function useOnDraw(onDraw) {
         ) {
           const point = pointInCanvas(e.clientX, e.clientY + 25);
           const ctx = canvasRef.current.getContext("2d");
-          // audioRef.current.currentTime = 1;
+          audioRef.volume = 2;
           audioRef.current.play();
           if (onDraw) onDraw(ctx, point, prevPointRef.current);
           prevPointRef.current = point;
