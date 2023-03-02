@@ -3,10 +3,51 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import bg from "../styles/back.png";
 import DrawingApp from "@/components/DrawingApp";
+import { useRef, useState } from "react";
+import html2canvas from "html2canvas";
 
-const inter = Inter({ subsets: ["latin"] });
+const colorArray = ["#1F45FC", "#228B22", "#7E191B", "#E30B5D"];
 
 export default function Home() {
+  const divRef = useRef(null);
+  const [amount, setAmount] = useState(3);
+  const [intensity, setIntensity] = useState(3);
+  const [color, setColor] = useState("#000");
+  const [context, setContext] = useState();
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+
+  const captureScreenshot = () => {
+    html2canvas(divRef.current).then((canvas) => {
+      const image = canvas.toDataURL(`image/png`);
+      const a = document.createElement("a");
+      a.href = image;
+      a.download = "screenshot.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+  };
+
+  const handleSize = (e) => {
+    const value = e.target.value;
+    if (value > 5) {
+      setAmount(5);
+    } else if (value < 1) {
+      setAmount(1);
+    } else setAmount(value);
+  };
+  const handleIntensity = (e) => {
+    const value = e.target.value;
+    if (value > 5) {
+      setIntensity(5);
+    } else if (value < 1) {
+      setIntensity(1);
+    } else setIntensity(value);
+  };
+  const clear = () => {
+    context.clearRect(0, 0, x, y);
+  };
   return (
     <>
       <Head>
@@ -15,11 +56,70 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        {/* <div className="chad">
-          <Image src={bg}></Image>
-        </div> */}
-        <DrawingApp />
+      <main className="main">
+        <div ref={divRef}>
+          <div className="chad">
+            <Image src={bg} alt={"Chad"}></Image>
+          </div>
+          <DrawingApp
+            amount={amount}
+            intensity={intensity}
+            color={color}
+            setContext={setContext}
+            x={x}
+            y={y}
+            setX={setX}
+            setY={setY}
+          />
+        </div>
+        <div className="colorPicker">
+          {/* {colorArray.map((el, i) => (
+            <div
+              key={i}
+              onClick={() => setColor(el)}
+              style={{
+                background: el,
+                width: "20px",
+                height: "20px",
+                borderRadius: "50%",
+                cursor: "pointer",
+              }}
+            ></div>
+          ))} */}
+          <div className="size">
+            Color:{" "}
+            <input type="color" onChange={(e) => setColor(e.target.value)} />
+          </div>
+          <div className="size">
+            <div>
+              Width :{" "}
+              <input
+                type="number"
+                min={1}
+                max={5}
+                value={amount}
+                onChange={handleSize}
+              />
+            </div>
+
+            <div>
+              Intensity:{" "}
+              <input
+                type="number"
+                min={1}
+                max={5}
+                value={intensity}
+                onChange={handleIntensity}
+              />
+            </div>
+          </div>
+          <div className="clear" onClick={captureScreenshot}>
+            Save
+          </div>
+          <div className="clear" onClick={() => clear()}>
+            Clear
+          </div>
+        </div>
       </main>
     </>
   );

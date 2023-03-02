@@ -1,32 +1,16 @@
 import { useOnDraw } from "@/components/Drawing/useonDraw";
 import React, { useEffect, useRef, useState } from "react";
-const colorArray = ["#1F45FC", "#228B22", "#7E191B", "#E30B5D"];
-const DrawingApp = () => {
+const DrawingApp = ({
+  amount,
+  intensity,
+  color,
+  setContext,
+  x,
+  y,
+  setX,
+  setY,
+}) => {
   const canvasRef = useRef(null);
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
-  const [context, setContext] = useState();
-  const [amount, setAmount] = useState(3);
-  const [intensity, setIntensity] = useState(3);
-
-  const handleSize = (e) => {
-    const value = e.target.value;
-    if (value > 5) {
-      setAmount(5);
-    } else if (value < 1) {
-      setAmount(1);
-    } else setAmount(value);
-  };
-  const handleIntensity = (e) => {
-    const value = e.target.value;
-    if (value > 5) {
-      setIntensity(5);
-    } else if (value < 1) {
-      setIntensity(1);
-    } else setIntensity(value);
-  };
-
-  const [color, setColor] = useState(colorArray[0]);
   useEffect(() => {
     if (canvasRef.current) {
       setX(canvasRef.current.clientWidth);
@@ -35,11 +19,11 @@ const DrawingApp = () => {
   }, []);
   const { setCanvasRef, onCanvasMouseDown, setAudioRef } = useOnDraw(onDraw);
   function onDraw(ctx, point, prevPoint) {
-    drawLine(prevPoint, point, ctx, color);
+    drawLine(prevPoint, point, ctx);
     setContext(ctx);
   }
 
-  function drawLine(start, end, ctx, color) {
+  function drawLine(start, end, ctx) {
     start = start ?? end;
     RandomizeParticles(
       start.x,
@@ -50,52 +34,9 @@ const DrawingApp = () => {
       intensity * 50
     );
   }
-  const clear = () => {
-    context.clearRect(0, 0, x, y);
-  };
+
   return (
     <div className="canvas" ref={canvasRef}>
-      <div className="colorPicker">
-        {colorArray.map((el, i) => (
-          <div
-            key={i}
-            onClick={() => setColor(el)}
-            style={{
-              background: el,
-              width: "20px",
-              height: "20px",
-              borderRadius: "50%",
-              cursor: "pointer",
-            }}
-          ></div>
-        ))}
-        <div className="size">
-          <div>
-            Width :
-            <input
-              type="number"
-              min={1}
-              max={5}
-              value={amount}
-              onChange={handleSize}
-            />{" "}
-          </div>
-
-          <div>
-            Intensity:
-            <input
-              type="number"
-              min={1}
-              max={5}
-              value={intensity}
-              onChange={handleIntensity}
-            />
-          </div>
-        </div>
-        <div className="clear" onClick={() => clear()}>
-          Clear
-        </div>
-      </div>
       <audio ref={setAudioRef}>
         <source
           src={
