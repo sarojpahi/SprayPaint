@@ -24,7 +24,7 @@ const DrawingApp = () => {
       setY(canvasRef.current.clientHeight);
     }
   }, []);
-  const { setCanvasRef, onCanvasMouseDown } = useOnDraw(onDraw);
+  const { setCanvasRef, onCanvasMouseDown, setAudioRef } = useOnDraw(onDraw);
   function onDraw(ctx, point, prevPoint) {
     drawLine(prevPoint, point, ctx, color);
     setContext(ctx);
@@ -66,6 +66,14 @@ const DrawingApp = () => {
           Clear
         </div>
       </div>
+      <audio ref={setAudioRef}>
+        <source
+          src={
+            "https://cdn.discordapp.com/attachments/1072488517017550868/1080789282572218418/continous_spray_spund.mp3"
+          }
+          type="audio/mp3"
+        />
+      </audio>
       <canvas
         width={x}
         height={y}

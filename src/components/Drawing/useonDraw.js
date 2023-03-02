@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 export function useOnDraw(onDraw) {
   const canvasRef = useRef(null);
+  const audioRef = useRef(null);
   const isDrawingRef = useRef(false);
   const prevPointRef = useRef(null);
 
@@ -10,6 +11,9 @@ export function useOnDraw(onDraw) {
 
   function setCanvasRef(ref) {
     canvasRef.current = ref;
+  }
+  function setAudioRef(ref) {
+    audioRef.current = ref;
   }
 
   function onCanvasMouseDown() {
@@ -31,9 +35,16 @@ export function useOnDraw(onDraw) {
 
     function initMouseMove() {
       const listener = (e) => {
-        if (isDrawingRef.current && canvasRef.current && e.button == 0) {
+        if (
+          isDrawingRef.current &&
+          canvasRef.current &&
+          e.button == 0 &&
+          audioRef.current
+        ) {
           const point = pointInCanvas(e.clientX, e.clientY + 25);
           const ctx = canvasRef.current.getContext("2d");
+          // audioRef.current.currentTime = 1;
+          audioRef.current.play();
           if (onDraw) onDraw(ctx, point, prevPointRef.current);
           prevPointRef.current = point;
         } else isDrawingRef.current = false;
@@ -47,6 +58,10 @@ export function useOnDraw(onDraw) {
       const listener = () => {
         isDrawingRef.current = false;
         prevPointRef.current = null;
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+        }
       };
       mouseUpRef.current = listener;
       window.addEventListener("mouseup", listener);
@@ -68,6 +83,7 @@ export function useOnDraw(onDraw) {
 
   return {
     setCanvasRef,
+    setAudioRef,
     onCanvasMouseDown,
   };
 }

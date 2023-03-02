@@ -3,13 +3,12 @@
   height: 100vh;
   /* background: #000; */
   overflow: hidden;
+
   /* cursor: crosshair; */
   cursor: url(https://user-images.githubusercontent.com/107534043/221851846-ee7d6a32-379e-4ddd-b33e-3c3b855d7dcd.jpg),
     auto;
 }
-.canvas canvas {
-  /* border: 1px solid red; */
-}
+
 .colorPicker {
   position: absolute;
   top: 10px;
@@ -38,4 +37,17 @@
   height: 30px;
   padding-left: 10px;
   font-weight: bold;
+}
+.chad {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  overflow: hidden;
+  z-index: -1;
+}
+.chad img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: -1;
 }
